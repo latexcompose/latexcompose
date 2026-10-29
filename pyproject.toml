@@ -1,7 +1,7 @@
 [project]
 name = "latexcompose"
 version = "0.0.0"
-description = "Library for LaTeX code generation"
+description = "Library to generate LaTeX code and to build extensions on top of this library"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = []
@@ -9,3 +9,8 @@ dependencies = []
 [build-system]
 requires = ["uv_build>=0.13.4,<0.14.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "zensical>=0.0.73",
+]
