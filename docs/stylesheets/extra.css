@@ -1,0 +1,30 @@
+/* Make headings less bold */
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5,
+.md-typeset h6 {
+    font-weight: 300;
+}
+
+.md-typeset .grid.cards > ul >li,
+.md-typeset .grid.cards > ol >li {
+    border: 1px solid var(--md-default-fg-color--lightest);
+}
+
+.doc-object.doc-class > .doc-contents {
+    border-left: 2px solid #629ace;
+    padding-left: 22px;
+    margin-left: 6px;
+}
+
+.doc-object.doc-function {
+    border-left: 1px solid #d1a9f1;
+    padding-left: 10px;
+}
+
+.doc-object.doc-attribute {
+    border-left: 1px solid #eba360;
+    padding-left: 10px;
+}

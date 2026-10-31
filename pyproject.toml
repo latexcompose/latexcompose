@@ -12,6 +12,7 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "mkdocstrings-python>=2.0.10",
     "pytest>=9.2.0",
     "pytest-cov>=7.1.0",
     "pytest-html>=4.2.0",

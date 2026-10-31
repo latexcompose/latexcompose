@@ -1,7 +1,7 @@
 # Copyright (c) 2026 Marco Wehnert
 # SPDX-License-Identifier: MIT
 
-"""latexcompose - Library for LaTeX"""
+"""latexcompose - Library for LaTeX."""
 
 from importlib.metadata import PackageNotFoundError, version
 

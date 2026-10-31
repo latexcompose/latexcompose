@@ -1,6 +1,6 @@
 [project]
 site_url = "https://latexcompose.github.io/"
-site_name = "latexcompose documentation"
+site_name = "latexcompose"
 site_description = "Library to generate LaTeX code and to build extensions on top of this library"
 site_author = "Marco Wehnert"
 
@@ -11,11 +11,52 @@ repo_name = "latexcompose/latexcompose"
 # edit_uri = "edit/main/docs/"
 
 nav = [
-  { "Get started" = "index.md" },
-  { "Markdown in 5min" = "markdown.md" },
+  { "Home" = "index.md" },
+
+  { "Getting started" = [
+    "getting-started/installation.md",
+    "getting-started/first-steps.md",
+    "getting-started/tutorial.md",
+  ] },
+
+  { "Guide" = [
+    "guide/index.md",
+    "guide/fundamentals.md",
+    "guide/examples.md",
+    "guide/extensions.md",
+  ]},
+
+  { "Reference" = [
+    "reference/index.md",
+    { "LaTeX commands" = [
+      "reference/latex-commands/index.md",
+      { "B" = [
+        { "\\begin" = "reference/latex-commands/begin.md" },
+      ] },
+      { "D" = [
+        { "\\documentclass" = "reference/latex-commands/documentclass.md" },
+      ] },
+      { "E" = [
+        { "\\end" = "reference/latex-commands/end.md" },
+      ] },
+    ]},
+  ]},
+
+  { "API" = [
+    "api/base.md",
+    "api/exceptions.md",
+    "api/io.md",
+    "api/latex.md",
+    "api/tokens.md",
+  ] },
+
+  { "Zensical" = [
+    "zensical/zensical.md",
+    "zensical/markdown.md",
+  ] },
 ]
 
-# extra_css = ["stylesheets/extra.css"]
+extra_css = ["stylesheets/extra.css"]
 # extra_javascript = ["javascripts/extra.js"]
 
 [project.theme]
@@ -43,7 +84,7 @@ features = [
   "navigation.path",
   # "navigation.prune",
   "navigation.sections",
-  # "navigation.tabs",
+  "navigation.tabs",
   # "navigation.tabs.sticky",
   "navigation.top",
   "navigation.tracking",
@@ -62,8 +103,9 @@ features = [
 # code = "Jetbrains Mono"
 
 [[project.theme.palette]]
-media = "(prefers-color-scheme)"
-toggle.icon = "lucide/sun-moon"
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
 toggle.name = "Switch to light mode"
 
 [[project.theme.palette]]
@@ -71,12 +113,6 @@ media = "(prefers-color-scheme: light)"
 scheme = "default"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
-
-[[project.theme.palette]]
-media = "(prefers-color-scheme: dark)"
-scheme = "slate"
-toggle.icon = "lucide/moon"
-toggle.name = "Switch to system preference"
 
 # [[project.extra.social]]
 # icon = "fontawesome/brands/github"
@@ -108,6 +144,7 @@ pymdownx.keys = {}
 pymdownx.magiclink = {}
 pymdownx.mark = {}
 pymdownx.smartsymbols = {}
+pymdownx.snippets = {}
 # pymdownx.snippets.base_path = "includes"
 pymdownx.superfences.custom_fences = [
   { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" },
@@ -116,3 +153,22 @@ pymdownx.tabbed.alternate_style = true
 pymdownx.tabbed.combine_header_slug = true
 pymdownx.tasklist.custom_checkbox = true
 pymdownx.tilde = {}
+
+[project.plugins.mkdocstrings.handlers.python]
+paths = ["src"]
+
+[project.plugins.mkdocstrings.handlers.python.options]
+docstring_style = "numpy"
+docstring_section_style = "table"
+merge_init_into_class = false
+parameter_headings = true
+separate_signature = true
+show_signature = true
+show_signature_annotations = true
+show_root_heading = true
+show_source = false
+show_symbol_type_toc = true
+show_symbol_type_heading = true
+show_submodules = false
+show_if_no_docstring = true
+show_root_toc_entry = false
