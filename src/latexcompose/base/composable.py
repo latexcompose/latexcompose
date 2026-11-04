@@ -1,52 +1,182 @@
 # Copyright (c) 2026 Marco Wehnert
 # SPDX-License-Identifier: MIT
 
-"""Contains class `Composable`."""
+"""Contains the Composable class."""
 
-from typing import TYPE_CHECKING, final, override
+from __future__ import annotations
 
-from .container import Container
+from typing import TYPE_CHECKING, override
+
+from .node import Node
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
 
-    from .node import Node
+    from latexcompose.base.context import IterTokensContext, IterTreeContext
+    from latexcompose.tokens.token import Token
 
 
-class Composable(Container):
-    """Extend the base class with the method `compose()`.
+class Composable(Node):
+    """Base class for nodes that can contain other nodes.
 
-    The class can be used as base class for any class which will
-    create the content by overwriting the method `compose()`.
+    A composable manages a collection of child nodes and provides
+    functionality for mounting, validating, and traversing those children.
 
-    ```python
-    class Composable:
-        def compose(self) -> Iterable[Node]:
-            yield Text("latexcompose is awesome!")
-    ```
+    Additional children can be generated dynamically by overriding
+    :meth:`compose`. These children are added to the initial children
+    during the mounting process.
+
+    Composition and mounting are performed only once per instance.
+
+    Attributes
+    ----------
+    _children : list[Node]
+        Child nodes contained by this composable. The list initially contains
+        the children supplied to the constructor and is extended with
+        dynamically composed children during mounting.
+    _mounted : bool
+        Indicates whether the composable has already been mounted. Once
+        mounted, the composition and mounting process is not repeated.
     """
 
-    def compose(self) -> Iterable[Node]:  # ruff: ignore[no-self-use]
-        """Compose dynamic content.
+    def __init__(self, *children: Node) -> None:
+        """Initialize the composable with its initial child nodes.
+
+        Parameters
+        ----------
+        *children : Node
+            Initial child nodes to be stored in the composable.
+        """
+        super().__init__()
+        self._children: list[Node] = list(children)
+        self._mounted = False
+
+    def compose(self) -> Iterator[Node]:  # ruff: ignore[no-self-use]
+        """Generate additional child nodes.
+
+        Subclasses can override this method to dynamically generate
+        additional children. The generated nodes are added to the initial
+        children during mounting.
 
         Returns
         -------
-        Iterable[Node]
-            Yields content at runtime.
+        Iterator[Node]
+            Additional child nodes.
         """
         return iter([])
 
-    @final
-    @override
-    def _compose_children(self) -> list[Node]:
-        """Return additional children created by method `compose`.
+    def _mount(self) -> None:
+        """Prepare the composable and recursively mount its children.
 
-        The method is declared as final, because child classes shall
-        override the method `compose`.
+        Mounting is performed only once. The method obtains additional
+        children from :meth:`compose`, combines them with the initial
+        children, and recursively mounts all child composables.
 
-        Returns
-        -------
-        list[Node]
-            Additional child nodes to be added to the container.
+        If the composable has already been mounted, the method returns
+        immediately.
+
+        Notes
+        -----
+        After successful mounting, the internal child collection contains
+        both the initial and dynamically composed children, and
+        :attr:`_mounted` is set to ``True``.
         """
-        return list(self.compose())
+        if self._mounted:
+            return
+
+        composed_children = self.compose()
+        children = [*self._children, *composed_children]
+
+        for child in children:
+            if isinstance(child, Composable):
+                child._mount()  # ruff: ignore[private-member-access]
+
+        self._children = children
+        self._mounted = True
+
+    @override
+    def validate(self) -> None:
+        """Prepare the composable and its children for validation.
+
+        Mounting ensures that all dynamically composed children are included
+        before further processing.
+        """
+        self._mount()
+
+    @override
+    def iter_tree(
+        self,
+        parent: Composable | None,
+        context: IterTreeContext,
+    ) -> Iterator[tuple[Node, Composable | None]]:
+        """Iterate over the composable and its descendants.
+
+        The composable is mounted before traversal begins. It is yielded
+        first, followed by all descendants in depth-first order.
+
+        Parameters
+        ----------
+        parent : Composable or None
+            Parent node of this node in the tree. Use ``None`` if the
+            node is the root node.
+        context : IterTreeContext
+            Context used during tree traversal.
+
+        Yields
+        ------
+        tuple[Node, Node or None]
+            A tuple containing the current node and its parent node.
+        """
+        self._mount()
+
+        yield self, parent
+
+        for child in self._children:
+            yield from child.iter_tree(
+                parent=self,
+                context=context,
+            )
+
+    @override
+    def iter_tokens(self, context: IterTokensContext) -> Iterator[Token]:
+        """Yield tokens generated by the child nodes.
+
+        Before iteration begins, the composable is mounted to ensure that
+        all its children are available.
+
+        Parameters
+        ----------
+        context : IterTokensContext
+            Context used during token generation.
+
+        Yields
+        ------
+        Token
+            Tokens generated by the child nodes, in their original order.
+
+        See Also
+        --------
+        _iter_children
+            Iterate over the tokens generated by individual children.
+        """
+        self._mount()
+        yield from self._iter_children(context)
+
+    def _iter_children(
+        self,
+        context: IterTokensContext,
+    ) -> Iterator[Token]:
+        """Yield tokens generated by the child nodes.
+
+        Parameters
+        ----------
+        context : IterTokensContext
+            Context used during token generation.
+
+        Yields
+        ------
+        Token
+            Tokens generated by the child nodes, in their original order.
+        """
+        for child in self._children:
+            yield from child.iter_tokens(context)

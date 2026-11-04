@@ -8,7 +8,7 @@ It is important to understand that `latexcompose` primarily uses
 classes to build LaTeX documents.
 
 You use these classes to __compose__ a tree-like structure.
-(That is the reason why the library is called __`latexcompose`__.)
+(That is the reason why the library is called __`latexcompose`__).
 
 If you are looking for methods like `generate_section`,
 `generate_table`, or something similar, you won't find them.
@@ -31,7 +31,7 @@ There are two classes that inherit from `Node`:
 
 - [Primitive][latexcompose.base.Primitive], which represents
   nodes that don't have any children, and
-- [Container][latexcompose.base.Container], which represents
+- [Composable][latexcompose.base.Composable], which represents
   nodes that can have children.
 
 ### `Primitive`
@@ -46,30 +46,32 @@ children. Examples include:
   (This can be useful in rare cases, but normally you won't need
   this class.)
 
-### `Container`
+### `Composable`
 
-The class [Container][latexcompose.base.Container] is used for
+The class [Composable][latexcompose.base.Composable] is used for
 nodes that can have children. This class gives our LaTeX documents
 a tree-like structure.
 
-A container can have child nodes, and each child node can be of
+A `Composable` can have child nodes, and each child node can be of
 any type. This means that a child node can also have children of
 its own.
 
-There are three classes that inherit from `Container`:
+There are several classes that inherit from `Composable`:
 
 - [Command][latexcompose.base.Command], which is used to define
   LaTeX commands.
 - [Argument][latexcompose.base.Argument], which is used to
   represent the arguments of a command.
-- [Composable][latexcompose.base.Composable], which implements
-  the `compose()` method to create dynamic content at runtime.
+- [OptionGroup][latexcompose.base.OptionGroup], which implements
+  optional arguments in a Command.
 
 ## Token classes
 
 After creating our LaTeX document, which can have a tree-like
 structure, we need to split it into smaller pieces. These pieces
-are called __tokens__. They are similar to the way LaTeX
+are called __tokens__. All tokens inherit from the class
+[Token][latexcompose.tokens.Token].
+They are similar to the way LaTeX
 interprets the individual parts of a document (although they are
 not exactly the same, the concepts are similar).
 

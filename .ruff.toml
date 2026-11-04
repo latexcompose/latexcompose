@@ -1,0 +1,103 @@
+preview = true
+line-length = 80
+
+[lint]
+select = [
+    "AIR",
+    "ERA",
+    "FAST",
+    "YTT",
+    "ANN",
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "CPY",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EM",
+    "EXE",
+    "FIX",
+    "FA",
+    "INT",
+    "ISC",
+    "ICN",
+    "LOG",
+    "G",
+    "INP",
+    "PIE",
+    "T20",
+    "PYI",
+    "PT",
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SIM",
+    "SLOT",
+    "TID",
+    "TD",
+    "TC",
+    "ARG",
+    "PTH",
+    "FLY",
+    "I",
+    "C90",
+    "NPY",
+    "PD",
+    "N",
+    "PERF",
+    "E",
+    "W",
+    "DOC",
+    "D",
+    "F",
+    "PGH",
+    "PL",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "UP",
+    "FURB",
+    "RUF",
+    "TRY",
+]
+
+fixable = ["ALL"]
+unfixable = []
+ignore = [
+]
+
+[lint.isort]
+split-on-trailing-comma = true
+force-sort-within-sections = true
+known-first-party = []
+
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    "assert", # Use of `assert` detected
+]
+"docs/**/*.py" = [
+    "implicit-namespace-package",
+    "undocumented-public-class",
+    "undocumented-public-function",
+    "undocumented-public-method",
+    "undocumented-public-module",
+    "missing-copyright-notice",
+    "no-self-use",
+]
+
+[lint.pydocstyle]
+convention = "numpy"
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

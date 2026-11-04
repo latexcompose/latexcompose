@@ -10,7 +10,6 @@ from latexcompose.latex.end import End
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-
 class HelloWorld(Composable):
 
     def compose(self) -> Iterable[Node]:

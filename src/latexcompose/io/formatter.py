@@ -1,16 +1,15 @@
 # Copyright (c) 2026 Marco Wehnert
 # SPDX-License-Identifier: MIT
 
-from latexcompose.latex.documentclass import DocumentClass
-from latexcompose.latex.end import End
-from latexcompose.latex.begin import Begin
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 import logging
 from typing import TYPE_CHECKING
 
-from latexcompose.base.raw_text import RawText
-from latexcompose.base.text import Text
+from latexcompose.latex import UsePackage
+from latexcompose.latex.begin import Begin
+from latexcompose.latex.documentclass import DocumentClass
+from latexcompose.latex.end import End
 from latexcompose.tokens import (
     EnterNodeToken,
     LeaveNodeToken,
@@ -23,7 +22,7 @@ from latexcompose.tokens import (
 # from latexcompose.packages.tikz.tikz_element import TikzElement
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Iterator
+    from collections.abc import Iterator
 
     from latexcompose.base.context import IterTokensContext
     from latexcompose.base.node import Node
@@ -59,8 +58,9 @@ class PrettyFormatter(Formatter):
         # Formatting rules are matched using isinstance().
         self._formatting_rules: dict[type[Node], FormattingRule] = {
             DocumentClass: FormattingRule(after="\n"),
-            Begin: FormattingRule(after="\n\n"),
-            End: FormattingRule(before="\n\n", after="\n"),
+            UsePackage: FormattingRule(after="\n"),
+            Begin: FormattingRule(after="\n"),
+            End: FormattingRule(before="\n", after="\n"),
             #Section: FormattingRule(before="\n\n", after="\n\n"),
             #TikzElement: FormattingRule(after="\n"),
         }
@@ -108,7 +108,7 @@ class PrettyFormatter(Formatter):
                     yield "{}"
 
                 yield current_string
-              
+
                 last_tex_token = token
 
             elif isinstance(token, EnterNodeToken):

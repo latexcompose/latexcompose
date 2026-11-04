@@ -4,7 +4,7 @@ site_name = "latexcompose"
 site_description = "Library to generate LaTeX code and to build extensions on top of this library"
 site_author = "Marco Wehnert"
 
-# copyright = "Copyright &copy; 2026 Marco Wehnert"
+copyright = "Copyright &copy; 2026 Marco Wehnert"
 
 repo_url = "https://github.com/latexcompose/latexcompose"
 repo_name = "latexcompose/latexcompose"
@@ -23,12 +23,13 @@ nav = [
     "guide/index.md",
     "guide/fundamentals.md",
     "guide/examples.md",
+    "guide/examples/hello_world.md",
     "guide/extensions.md",
   ]},
 
   { "Reference" = [
     "reference/index.md",
-    { "LaTeX commands" = [
+    { "TeX/LaTeX commands" = [
       "reference/latex-commands/index.md",
       { "B" = [
         { "\\begin" = "reference/latex-commands/begin.md" },
@@ -38,6 +39,15 @@ nav = [
       ] },
       { "E" = [
         { "\\end" = "reference/latex-commands/end.md" },
+      ] },
+      { "M" = [
+        { "\\maketitle" = "reference/latex-commands/maketitle.md" },
+      ] },
+      { "T" = [
+        { "\\textbf" = "reference/latex-commands/textbf.md" },
+      ] },
+      { "U" = [
+        { "\\usepackage" = "reference/latex-commands/usepackage.md" },
       ] },
     ]},
   ]},
@@ -97,6 +107,9 @@ features = [
 
 # [project.theme.icon]
 # logo = "lucide/smile"
+
+[project.theme.icon.admonition]
+example = "lucide/file-code"
 
 # [project.theme.font]
 # text = "Inter"

@@ -28,3 +28,11 @@
     border-left: 1px solid #eba360;
     padding-left: 10px;
 }
+
+/* Hack to hide the examples from menu */
+.md-nav__item:has(
+    > .md-nav__link[href*="/guide/examples/hello_world"]
+
+) {
+    display: none;
+}

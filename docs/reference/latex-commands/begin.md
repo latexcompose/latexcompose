@@ -10,8 +10,8 @@ with the corresponding `\end` command.
 \end{<environment_name>}
 ```
 
-For further information, see the
-[LaTeX reference on environments](https://latexref.xyz/Environments.html)
+For further information see
+[https://latexref.xyz/Environments.html](https://latexref.xyz/Environments.html){:target="_blank" rel="noopener noreferrer"}
 
 See also: [`\end`](end.md)
 
@@ -22,7 +22,7 @@ Text("latexcompose is awesome!")
 End("center")
 ```
 
-## Generated LaTeX
+## Generated LaTeX code
 
 ```latex
 \begin{center}

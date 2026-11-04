@@ -1,23 +1,19 @@
 # Copyright (c) 2026 Marco Wehnert
 # SPDX-License-Identifier: MIT
 
+"""Contains class `Composable`."""
+
 from __future__ import annotations
 
-from enum import Enum
 from typing import TYPE_CHECKING, override
 
+from latexcompose.base.composable import Composable
+from latexcompose.base.group_delimiter import GroupDelimiter
+from latexcompose.tokens import TexBeginOptionGroupToken, TexEndOptionGroupToken
 from latexcompose.tokens.enter_node_token import EnterNodeToken
 from latexcompose.tokens.leave_node_token import LeaveNodeToken
 from latexcompose.tokens.tex_begin_group_token import TexBeginGroupToken
-from latexcompose.tokens.tex_begin_optional_argument_token import (
-    TexBeginOptionalArgumentToken,
-)
 from latexcompose.tokens.tex_end_group_token import TexEndGroupToken
-from latexcompose.tokens.tex_end_optional_argument_token import (
-    TexEndOptionalArgumentToken,
-)
-
-from .container import Container
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -28,20 +24,13 @@ if TYPE_CHECKING:
     from .node import Node
 
 
-class ArgumentDelimiter(Enum):
-    """Supported delimiters for LaTeX arguments."""
-
-    BRACES = "{}"
-    BRACKETS = "[]"
-
-
-class Argument(Container):
+class Argument(Composable):
     """Represents an argument of a [Command][latexcompose.base.command.Command]."""
 
     def __init__(
         self,
         *children: Node,
-        delimiter: ArgumentDelimiter = ArgumentDelimiter.BRACES,
+        delimiter: GroupDelimiter = GroupDelimiter.BRACES,
     ) -> None:
         super().__init__(*children)
         self._delimiter = delimiter
@@ -55,14 +44,14 @@ class Argument(Container):
 
         yield EnterNodeToken(self)
 
-        if self._delimiter == ArgumentDelimiter.BRACES:
+        if self._delimiter == GroupDelimiter.BRACES:
             yield TexBeginGroupToken()
-            yield from self._iter_children(context)
+            yield from super().iter_tokens(context)
             yield TexEndGroupToken()
 
-        elif self._delimiter == ArgumentDelimiter.BRACKETS:
-            yield TexBeginOptionalArgumentToken()
-            yield from self._iter_children(context)
-            yield TexEndOptionalArgumentToken()
+        elif self._delimiter == GroupDelimiter.BRACKETS:
+            yield TexBeginOptionGroupToken()
+            yield from super().iter_tokens(context)
+            yield TexEndOptionGroupToken()
 
         yield LeaveNodeToken(self)
